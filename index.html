@@ -1,747 +1,1023 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduLMS – Educational Learning Platform</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduLMS – Educational Learning Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo" onclick="showPage('home')">
-    <div class="logo-icon">E</div>
-    EduLMS
-  </div>
-  <div class="nav-links">
-    <a onclick="showPage('home')" id="nav-home" class="active">Home</a>
-    <a onclick="showPage('dashboard')" id="nav-dashboard">Dashboard</a>
-    <a onclick="showPage('courses')" id="nav-courses">Courses</a>
-    <a onclick="showPage('progress')" id="nav-progress">Progress</a>
-    <a onclick="showPage('contact')" id="nav-contact">Contact</a>
-  </div>
-  <div class="nav-right">
-    <button class="btn btn-outline btn-sm" onclick="showPage('about')">About</button>
-    <button class="btn btn-primary btn-sm" onclick="showToast('👋 Welcome back, Student!')">Sign In</button>
-  </div>
-</nav>
-
-<!-- ===================== HOME PAGE ===================== -->
-<div id="page-home" class="page active">
-  <section class="hero">
-    <div class="hero-content fade-up">
-      <div class="hero-badge">✦ Educational Learning Platform</div>
-      <h1>Learn without <em>limits.</em><br>Grow without boundaries.</h1>
-      <p>Access world-class courses, track your progress, and achieve your learning goals — all in one beautifully crafted platform.</p>
-      <div class="hero-actions">
-        <button class="btn btn-gold btn-lg" onclick="showPage('courses')">Browse Courses</button>
-        <button class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,0.3)" onclick="showPage('dashboard')">View Dashboard</button>
-      </div>
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="logo-icon">E</div>
+      EduLMS
     </div>
-    <div class="hero-visual fade-up fade-up-delay-1">
-      <div class="hero-stats">
-        <div class="stat-card">
-          <div class="stat-num">248</div>
-          <div class="stat-label">Active Courses</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">12k+</div>
-          <div class="stat-label">Students</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">96%</div>
-          <div class="stat-label">Completion Rate</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">84</div>
-          <div class="stat-label">Expert Instructors</div>
-        </div>
-      </div>
+    <div class="nav-links">
+      <a onclick="showPage('home')" id="nav-home">Home</a>
+      <a onclick="showPage('dashboard')" id="nav-dashboard">Dashboard</a>
+      <a onclick="showPage('courses')" id="nav-courses">Courses</a>
+      <a onclick="showPage('progress')" id="nav-progress">Progress</a>
+      <a onclick="showPage('contact')" id="nav-contact">Contact</a>
     </div>
-  </section>
-
-  <section class="search-section">
-    <h2>Course Search &amp; Enrollment</h2>
-    <div class="search-bar">
-      <input type="text" id="home-search" placeholder="Search courses..." oninput="filterHomeSearch()">
-      <button onclick="filterHomeSearch()">🔍</button>
+    <div class="nav-mobile-toggle" onclick="App.toggleMobileMenu()">☰</div>
+    <div class="nav-right">
+      <button class="btn btn-outline btn-sm" onclick="showPage('about')">About</button>
+      <button class="btn btn-primary btn-sm" onclick="showPage('signin')">Sign In</button>
     </div>
-    <div class="search-filters">
-      <div class="filter-group">
-        <label>Category</label>
-        <select id="filter-category" onchange="filterHomeSearch()">
-          <option value="">All Categories</option>
-          <option>Computer Science</option>
-          <option>Mathematics</option>
-          <option>Design</option>
-          <option>Biology</option>
-          <option>Literature</option>
-          <option>Data Science</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Level</label>
-        <select id="filter-level" onchange="filterHomeSearch()">
-          <option value="">All Levels</option>
-          <option>Beginner</option>
-          <option>Intermediate</option>
-          <option>Advanced</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Start Date</label>
-        <input type="date" id="filter-date">
-      </div>
-      <div class="enrollment-filter">
-        <label class="title">Enrollment</label>
-        <div class="checkbox-row">
-          <label><input type="checkbox" id="check-open" checked onchange="filterHomeSearch()"> Open</label>
-          <label><input type="checkbox" id="check-closed" checked onchange="filterHomeSearch()"> Closed</label>
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="filterHomeSearch()">Find Courses</button>
-    </div>
-  </section>
+  </nav>
 
-  <section class="courses-section">
-    <div class="section-header">
-      <h2>Featured Courses</h2>
-      <button class="btn btn-outline btn-sm" onclick="showPage('courses')">View All →</button>
-    </div>
-    <div class="courses-grid" id="home-courses-grid"></div>
-  </section>
-
-  <div data-role="pagebar">
-    <span data-role="brandname">EduLMS</span>
-    <div data-role="navlinks">
-      <a onclick="showPage('about')">About Us</a>
-      <a onclick="showPage('about')">FAQs</a>
-      <a onclick="showPage('contact')">Support</a>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== DASHBOARD PAGE ===================== -->
-<div id="page-dashboard" class="page">
-  <div class="dashboard-layout">
-    <aside class="sidebar">
-      <div class="sidebar-item active">
-        <span class="sidebar-icon">📊</span> Dashboard
-      </div>
-      <div class="sidebar-item" onclick="showPage('courses')">
-        <span class="sidebar-icon">📚</span> Courses
-        <span class="badge-count">4</span>
-      </div>
-      <div class="sidebar-item" onclick="showPage('progress')">
-        <span class="sidebar-icon">📈</span> My Progress
-      </div>
-      <div class="sidebar-item">
-        <span class="sidebar-icon">📝</span> Assignments
-        <span class="badge-count">2</span>
-      </div>
-      <div class="sidebar-item">
-        <span class="sidebar-icon">📅</span> Schedule
-      </div>
-      <div class="sidebar-section-title">Communication</div>
-      <div class="sidebar-item">
-        <span class="sidebar-icon">💬</span> Discussion
-      </div>
-      <div class="sidebar-item">
-        <span class="sidebar-icon">📢</span> Announcements
-        <span class="badge-count">3</span>
-      </div>
-      <div class="sidebar-section-title">Account</div>
-      <div class="sidebar-item" onclick="showPage('contact')">
-        <span class="sidebar-icon">📞</span> Contact
-      </div>
-      <div class="sidebar-item">
-        <span class="sidebar-icon">⚙️</span> Settings
-      </div>
-    </aside>
-
-    <main class="dashboard-main">
-      <div class="dashboard-header">
-        <h1>Good morning, Alex! 👋</h1>
-        <p>You have 2 assignments due this week and 3 new announcements.</p>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-box">
-          <div class="stat-icon icon-gold">📚</div>
-          <div class="stat-box-info">
-            <div class="stat-box-num">4</div>
-            <div class="stat-box-label">Enrolled Courses</div>
-          </div>
+  <!-- ===================== HOME PAGE ===================== -->
+  <div id="page-home" class="page">
+    <section class="hero">
+      <div class="hero-content fade-up">
+        <div class="hero-badge">✦ Educational Learning Platform</div>
+        <h1>Learn without <em>limits.</em><br>Grow without boundaries.</h1>
+        <p>Access world-class courses, track your progress, and achieve your learning goals — all in one beautifully
+          crafted platform.</p>
+        <div class="hero-actions">
+          <button class="btn btn-gold btn-lg" onclick="showPage('courses')">Browse Courses</button>
+          <button class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,0.3)"
+            onclick="showPage('dashboard')">View Dashboard</button>
         </div>
-        <div class="stat-box">
-          <div class="stat-icon icon-sage">✅</div>
-          <div class="stat-box-info">
-            <div class="stat-box-num">68%</div>
-            <div class="stat-box-label">Avg. Progress</div>
+      </div>
+      <div class="hero-visual fade-up fade-up-delay-1">
+        <div class="hero-stats">
+          <div class="stat-card">
+            <div class="stat-num">248</div>
+            <div class="stat-label">Active Courses</div>
           </div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-icon icon-rust">📝</div>
-          <div class="stat-box-info">
-            <div class="stat-box-num">2</div>
-            <div class="stat-box-label">Due Assignments</div>
+          <div class="stat-card">
+            <div class="stat-num">12k+</div>
+            <div class="stat-label">Students</div>
           </div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-icon icon-ink">🏆</div>
-          <div class="stat-box-info">
-            <div class="stat-box-num">12</div>
-            <div class="stat-box-label">Badges Earned</div>
+          <div class="stat-card">
+            <div class="stat-num">96%</div>
+            <div class="stat-label">Completion Rate</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">84</div>
+            <div class="stat-label">Expert Instructors</div>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="dashboard-grid">
-        <div class="card">
-          <h3>Course Progress <a onclick="showPage('progress')">View all →</a></h3>
-          <div class="progress-item">
-            <div class="progress-header"><span>🖥️ Introduction to CS</span><span style="color:var(--sage);font-weight:700">82%</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-header"><span>📐 Calculus II</span><span style="color:var(--sage);font-weight:700">55%</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-header"><span>🎨 UI/UX Design</span><span style="color:var(--gold);font-weight:700">40%</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--gold)"></div></div>
-          </div>
-          <div class="progress-item">
-            <div class="progress-header"><span>🧬 Cell Biology</span><span style="color:var(--rust);font-weight:700">20%</span></div>
-            <div class="progress-bar"><div class="progress-fill" style="width:20%;background:var(--rust)"></div></div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Recent Activity</h3>
-          <div class="activity-item">
-            <div class="activity-dot dot-sage"></div>
-            <div>
-              <div class="activity-text"><strong>Assignment submitted</strong><br>Algo Analysis — Heap Sort</div>
-              <div class="activity-time">2 hours ago</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot dot-gold"></div>
-            <div>
-              <div class="activity-text"><strong>Quiz completed</strong><br>Calculus II — Integration</div>
-              <div class="activity-time">Yesterday</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot dot-rust"></div>
-            <div>
-              <div class="activity-text"><strong>New announcement</strong><br>UI/UX Design — Project brief</div>
-              <div class="activity-time">2 days ago</div>
-            </div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot dot-sage"></div>
-            <div>
-              <div class="activity-text"><strong>Badge earned</strong><br>"Consistent Learner" 🏆</div>
-              <div class="activity-time">3 days ago</div>
-            </div>
-          </div>
-        </div>
+    <section class="search-section">
+      <h2>Course Search &amp; Enrollment</h2>
+      <div class="search-bar">
+        <input type="text" id="home-search" placeholder="Search courses...">
+        <button onclick="App.handleFilterChange()">🔍</button>
       </div>
-    </main>
-  </div>
-  <div data-role="pagebar">
-    <span data-role="brandname">EduLMS</span>
-    <div data-role="navlinks">
-      <a onclick="showPage('about')">About Us</a>
-      <a onclick="showPage('about')">FAQs</a>
-      <a onclick="showPage('contact')">Support</a>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== COURSES PAGE ===================== -->
-<div id="page-courses" class="page">
-  <section class="search-section">
-    <h2>All Courses</h2>
-    <div class="search-bar">
-      <input type="text" id="courses-search" placeholder="Search courses..." oninput="filterCoursesPage()">
-      <button onclick="filterCoursesPage()">🔍</button>
-    </div>
-    <div class="search-filters">
-      <div class="filter-group">
-        <label>Category</label>
-        <select id="cp-category" onchange="filterCoursesPage()">
-          <option value="">All Categories</option>
-          <option>Computer Science</option>
-          <option>Mathematics</option>
-          <option>Design</option>
-          <option>Biology</option>
-          <option>Literature</option>
-          <option>Data Science</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label>Level</label>
-        <select id="cp-level" onchange="filterCoursesPage()">
-          <option value="">All Levels</option>
-          <option>Beginner</option>
-          <option>Intermediate</option>
-          <option>Advanced</option>
-        </select>
-      </div>
-      <div class="enrollment-filter">
-        <label class="title">Enrollment</label>
-        <div class="checkbox-row">
-          <label><input type="checkbox" id="cp-open" checked onchange="filterCoursesPage()"> Open</label>
-          <label><input type="checkbox" id="cp-closed" checked onchange="filterCoursesPage()"> Closed</label>
-        </div>
-      </div>
-      <button class="btn btn-primary" onclick="filterCoursesPage()">Find Courses</button>
-    </div>
-  </section>
-
-  <section class="courses-section">
-    <div class="section-header">
-      <h2 id="courses-count">All Courses</h2>
-    </div>
-    <div class="courses-grid" id="courses-grid"></div>
-  </section>
-
-  <div data-role="pagebar">
-    <span data-role="brandname">EduLMS</span>
-    <div data-role="navlinks">
-      <a onclick="showPage('about')">About Us</a>
-      <a onclick="showPage('about')">FAQs</a>
-      <a onclick="showPage('contact')">Support</a>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== PROGRESS PAGE ===================== -->
-<div id="page-progress" class="page">
-  <div class="page-content">
-    <div class="page-title">My Learning Progress</div>
-    <div class="page-subtitle">Track your journey across all enrolled courses.</div>
-
-    <div class="progress-grid">
-      <div class="progress-card">
-        <div class="progress-card-header">
-          <div class="course-icon-sm banner-cs" style="border-radius:10px">🖥️</div>
-          <div>
-            <h3>Introduction to Computer Science</h3>
-            <div class="instructor">Dr. Sarah Mitchell</div>
-          </div>
-        </div>
-        <div class="big-progress">
-          <div class="circle-progress">
-            <svg viewBox="0 0 80 80" width="80" height="80">
-              <circle class="track" cx="40" cy="40" r="34"/>
-              <circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="38.4"/>
-            </svg>
-            <div class="circle-num">82%</div>
-          </div>
-          <div class="progress-topics">10 / 12 modules complete</div>
-        </div>
-        <div class="milestone-row">
-          <span class="milestone done">Intro ✓</span>
-          <span class="milestone done">Algorithms ✓</span>
-          <span class="milestone done">Data Structures ✓</span>
-          <span class="milestone pending">Capstone</span>
-        </div>
-      </div>
-
-      <div class="progress-card">
-        <div class="progress-card-header">
-          <div class="course-icon-sm banner-math" style="border-radius:10px">📐</div>
-          <div>
-            <h3>Calculus II</h3>
-            <div class="instructor">Prof. James Chen</div>
-          </div>
-        </div>
-        <div class="big-progress">
-          <div class="circle-progress">
-            <svg viewBox="0 0 80 80" width="80" height="80">
-              <circle class="track" cx="40" cy="40" r="34"/>
-              <circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="96.1" stroke="#3498db"/>
-            </svg>
-            <div class="circle-num">55%</div>
-          </div>
-          <div class="progress-topics">6 / 11 modules complete</div>
-        </div>
-        <div class="milestone-row">
-          <span class="milestone done">Limits ✓</span>
-          <span class="milestone done">Derivatives ✓</span>
-          <span class="milestone pending">Integration</span>
-          <span class="milestone pending">Series</span>
-        </div>
-      </div>
-
-      <div class="progress-card">
-        <div class="progress-card-header">
-          <div class="course-icon-sm banner-design" style="border-radius:10px">🎨</div>
-          <div>
-            <h3>UI/UX Design Fundamentals</h3>
-            <div class="instructor">Ms. Priya Sharma</div>
-          </div>
-        </div>
-        <div class="big-progress">
-          <div class="circle-progress">
-            <svg viewBox="0 0 80 80" width="80" height="80">
-              <circle class="track" cx="40" cy="40" r="34"/>
-              <circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="128.2" stroke="#c9a84c"/>
-            </svg>
-            <div class="circle-num">40%</div>
-          </div>
-          <div class="progress-topics">4 / 10 modules complete</div>
-        </div>
-        <div class="milestone-row">
-          <span class="milestone done">Basics ✓</span>
-          <span class="milestone done">Typography ✓</span>
-          <span class="milestone pending">Wireframing</span>
-          <span class="milestone pending">Prototyping</span>
-        </div>
-      </div>
-
-      <div class="progress-card">
-        <div class="progress-card-header">
-          <div class="course-icon-sm banner-bio" style="border-radius:10px">🧬</div>
-          <div>
-            <h3>Cell Biology</h3>
-            <div class="instructor">Dr. Ananya Roy</div>
-          </div>
-        </div>
-        <div class="big-progress">
-          <div class="circle-progress">
-            <svg viewBox="0 0 80 80" width="80" height="80">
-              <circle class="track" cx="40" cy="40" r="34"/>
-              <circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="170.9" stroke="#c0512f"/>
-            </svg>
-            <div class="circle-num">20%</div>
-          </div>
-          <div class="progress-topics">2 / 9 modules complete</div>
-        </div>
-        <div class="milestone-row">
-          <span class="milestone done">Cell Theory ✓</span>
-          <span class="milestone pending">Organelles</span>
-          <span class="milestone pending">Mitosis</span>
-          <span class="milestone pending">Genetics</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="max-width:600px">
-      <h3>Overall Statistics</h3>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:center">
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--sage)">49h</div>
-          <div style="font-size:13px;color:var(--muted);margin-top:4px">Total Study Time</div>
-        </div>
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--gold)">12</div>
-          <div style="font-size:13px;color:var(--muted);margin-top:4px">Assignments Submitted</div>
-        </div>
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--rust)">B+</div>
-          <div style="font-size:13px;color:var(--muted);margin-top:4px">Avg. Grade</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div data-role="pagebar">
-    <span data-role="brandname">EduLMS</span>
-    <div data-role="navlinks">
-      <a onclick="showPage('about')">About Us</a>
-      <a onclick="showPage('about')">FAQs</a>
-      <a onclick="showPage('contact')">Support</a>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== CONTACT PAGE ===================== -->
-<div id="page-contact" class="page">
-  <div class="page-content">
-    <div class="page-title">Contact &amp; Support</div>
-    <div class="page-subtitle">We're here to help. Reach out to our team anytime.</div>
-
-    <div class="contact-grid">
-      <div class="contact-info">
-        <h2>Get in Touch</h2>
-        <p>Have questions about a course, need technical help, or want to partner with us? Our support team typically responds within 24 hours.</p>
-
-        <div class="contact-item">
-          <div class="contact-icon">📧</div>
-          <div class="contact-item-text">
-            <strong>Email Support</strong>
-            <span>support@edulms.edu</span>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">📞</div>
-          <div class="contact-item-text">
-            <strong>Phone</strong>
-            <span>+91 98765 43210</span>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">🕐</div>
-          <div class="contact-item-text">
-            <strong>Hours</strong>
-            <span>Mon–Fri 9am–6pm IST</span>
-          </div>
-        </div>
-        <div class="contact-item">
-          <div class="contact-icon">📍</div>
-          <div class="contact-item-text">
-            <strong>Address</strong>
-            <span>Amrita School of Computing, Coimbatore</span>
-          </div>
-        </div>
-
-        <div class="team-section">
-          <h3>Project Team</h3>
-          <div class="team-grid">
-            <div class="team-card">
-              <div class="team-avatar">MJ</div>
-              <div class="team-info">
-                <strong>M. Puri Jagannadh</strong>
-                <span>AM.SC.U4CSE25333</span>
-                <div class="team-links">
-                  <a href="https://www.linkedin.com/in/m-puri-jagannadh-undefined-94372840a/" target="_blank" class="team-link linkedin">💼 LinkedIn</a>
-                  <a href="https://purijagannadh22.github.io/portfolio/" target="_blank" class="team-link portfolio">🌐 Portfolio</a>
-                </div>
-              </div>
-            </div>
-            <div class="team-card">
-              <div class="team-avatar">AS</div>
-              <div class="team-info">
-                <strong>Aditya Sai Raghavendra</strong>
-                <span>AM.SC.U4CSE25369</span>
-                <div class="team-links">
-                  <a href="https://www.linkedin.com/in/aditya-sai" target="_blank" class="team-link linkedin">💼 LinkedIn</a>
-                  <a href="https://adityasairaghavendra27-oss.github.io/Portfolio/" target="_blank" class="team-link portfolio">🌐 Portfolio</a>
-                </div>
-              </div>
-            </div>
-            <div class="team-card">
-              <div class="team-avatar">EK</div>
-              <div class="team-info">
-                <strong>Endala Kushal</strong>
-                <span>AM.SC.U4CSE25364</span>
-                <div class="team-links">
-                  <a href="https://www.linkedin.com/in/kushal-endala-89a638392/" target="_blank" class="team-link linkedin">💼 LinkedIn</a>
-                  <a href="https://kushalendala.github.io/Portfolio-Kushal/" target="_blank" class="team-link portfolio">🌐 Portfolio</a>
-                </div>
-              </div>
-            </div>
-            <div class="team-card">
-              <div class="team-avatar">MG</div>
-              <div class="team-info">
-                <strong>M. Gowtham</strong>
-                <span>AM.SC.U4CSE25365</span>
-                <div class="team-links">
-                  <a href="https://www.linkedin.com/in/gautham-nani-4237a7388/" target="_blank" class="team-link linkedin">💼 LinkedIn</a>
-                  <a href="https://gauthammareedu123-dev.github.io/port/" target="_blank" class="team-link portfolio">🌐 Portfolio</a>
-                </div>
-              </div>
-            </div>
-            <div class="team-card">
-              <div class="team-avatar">VV</div>
-              <div class="team-info">
-                <strong>Venkata Vinay</strong>
-                <span>AM.SC.U4CSE25336</span>
-                <div class="team-links">
-                    <a href="https://www.linkedin.com/in/venkatavinay-narra-3b897140a//" target="_blank" class="team-link linkedin">💼 LinkedIn</a>
-                    <a href="https://narravenkatavinay24.github.io/UID-Project-Portfolio-/" target="_blank" class="team-link portfolio">🌐 Portfolio</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="contact-form">
-        <h3 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:24px">Send us a message</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" placeholder="Arjun">
-          </div>
-          <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" placeholder="Sharma">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" placeholder="arjun@email.com">
-        </div>
-        <div class="form-group">
-          <label>Subject</label>
-          <select>
-            <option>Technical Support</option>
-            <option>Course Enrollment</option>
-            <option>Billing &amp; Payments</option>
-            <option>Content Feedback</option>
-            <option>Partnership</option>
-            <option>Other</option>
+      <div class="search-filters">
+        <div class="filter-group">
+          <label>Category</label>
+          <select id="filter-category">
+            <option value="">All Categories</option>
+            <option>Computer Science</option>
+            <option>Mathematics</option>
+            <option>Design</option>
+            <option>Biology</option>
+            <option>Literature</option>
+            <option>Data Science</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Message</label>
-          <textarea rows="5" placeholder="Describe your question or issue..."></textarea>
+        <div class="filter-group">
+          <label>Level</label>
+          <select id="filter-level">
+            <option value="">All Levels</option>
+            <option>Beginner</option>
+            <option>Intermediate</option>
+            <option>Advanced</option>
+          </select>
         </div>
-        <button class="btn btn-primary btn-lg" onclick="showToast('✅ Message sent! We\'ll be in touch within 24 hours.')">Send Message</button>
+        <div class="enrollment-filter">
+          <label class="title">Enrollment</label>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="check-open" checked> Open</label>
+            <label><input type="checkbox" id="check-closed" checked> Closed</label>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="App.handleFilterChange()">Find Courses</button>
+      </div>
+    </section>
+
+    <section class="courses-section">
+      <div class="section-header">
+        <h2>Featured Courses</h2>
+        <button class="btn btn-outline btn-sm" onclick="showPage('courses')">View All →</button>
+      </div>
+      <div class="courses-grid" id="home-courses-grid"></div>
+    </section>
+  </div>
+
+  <!-- ===================== DASHBOARD PAGE ===================== -->
+  <div id="page-dashboard" class="page">
+    <div class="dashboard-layout">
+      <aside class="sidebar">
+        <div class="sidebar-item" onclick="showPage('dashboard')">
+          <span class="sidebar-icon">📊</span> Dashboard
+        </div>
+        <div class="sidebar-item" onclick="showPage('courses')">
+          <span class="sidebar-icon">📚</span> Courses
+          <span class="badge-count">4</span>
+        </div>
+        <div class="sidebar-item" onclick="showPage('progress')">
+          <span class="sidebar-icon">📈</span> My Progress
+        </div>
+        <div class="sidebar-item" onclick="showPage('assignments')">
+          <span class="sidebar-icon">📝</span> Assignments
+          <span class="badge-count">2</span>
+        </div>
+        <div class="sidebar-item" onclick="showPage('schedule')">
+          <span class="sidebar-icon">📅</span> Schedule
+        </div>
+        <div class="sidebar-section-title">Communication</div>
+        <div class="sidebar-item" onclick="showPage('discussions')">
+          <span class="sidebar-icon">💬</span> Discussion
+        </div>
+        <div class="sidebar-item" onclick="showPage('announcements')">
+          <span class="sidebar-icon">📢</span> Announcements
+          <span class="badge-count">3</span>
+        </div>
+        <div class="sidebar-section-title">Account</div>
+        <div class="sidebar-item" onclick="showPage('contact')">
+          <span class="sidebar-icon">📞</span> Contact
+        </div>
+        <div class="sidebar-item" onclick="showPage('settings')">
+          <span class="sidebar-icon">⚙️</span> Settings
+        </div>
+      </aside>
+
+      <main class="dashboard-main">
+        <div class="dashboard-header">
+          <h1>Good morning, Student! 👋</h1>
+          <p>You have 2 assignments due this week and 3 new announcements.</p>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-box">
+            <div class="stat-icon icon-gold">📚</div>
+            <div class="stat-box-info">
+              <div class="stat-box-num">4</div>
+              <div class="stat-box-label">Enrolled Courses</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon icon-sage">✅</div>
+            <div class="stat-box-info">
+              <div class="stat-box-num">68%</div>
+              <div class="stat-box-label">Avg. Progress</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon icon-rust">📝</div>
+            <div class="stat-box-info">
+              <div class="stat-box-num">2</div>
+              <div class="stat-box-label">Due Assignments</div>
+            </div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-icon icon-ink">🏆</div>
+            <div class="stat-box-info">
+              <div class="stat-box-num">12</div>
+              <div class="stat-box-label">Badges Earned</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3>Course Progress <a onclick="showPage('progress')">View all →</a></h3>
+            <div class="progress-item">
+              <div class="progress-header"><span>🖥️ Introduction to CS</span><span>82%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:82%"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-header"><span>📐 Calculus II</span><span>55%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:55%"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-header"><span>🎨 UI/UX Design</span><span>40%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:40%;background:var(--gold)"></div>
+              </div>
+            </div>
+            <div class="progress-item">
+              <div class="progress-header"><span>🧬 Cell Biology</span><span>20%</span></div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:20%;background:var(--rust)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Recent Activity</h3>
+            <div class="activity-item">
+              <div class="activity-dot dot-sage"></div>
+              <div>
+                <div class="activity-text"><strong>Assignment submitted</strong><br>Algo Analysis — Heap Sort</div>
+                <div class="activity-time">2 hours ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-gold"></div>
+              <div>
+                <div class="activity-text"><strong>Quiz completed</strong><br>Calculus II — Integration</div>
+                <div class="activity-time">Yesterday</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-rust"></div>
+              <div>
+                <div class="activity-text"><strong>New announcement</strong><br>UI/UX Design — Project brief</div>
+                <div class="activity-time">2 days ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-sage"></div>
+              <div>
+                <div class="activity-text"><strong>Badge earned</strong><br>"Consistent Learner" 🏆</div>
+                <div class="activity-time">3 days ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ===================== COURSES PAGE ===================== -->
+  <div id="page-courses" class="page">
+    <section class="search-section">
+      <h2>All Courses</h2>
+      <div class="search-bar">
+        <input type="text" id="courses-search" placeholder="Search courses...">
+        <button onclick="App.handleFilterChange()">🔍</button>
+      </div>
+      <div class="search-filters">
+        <div class="filter-group">
+          <label>Category</label>
+          <select id="cp-category">
+            <option value="">All Categories</option>
+            <option>Computer Science</option>
+            <option>Mathematics</option>
+            <option>Design</option>
+            <option>Biology</option>
+            <option>Literature</option>
+            <option>Data Science</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Level</label>
+          <select id="cp-level">
+            <option value="">All Levels</option>
+            <option>Beginner</option>
+            <option>Intermediate</option>
+            <option>Advanced</option>
+          </select>
+        </div>
+        <div class="enrollment-filter">
+          <label class="title">Enrollment</label>
+          <div class="checkbox-row">
+            <label><input type="checkbox" id="cp-open" checked> Open</label>
+            <label><input type="checkbox" id="cp-closed" checked> Closed</label>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="App.handleFilterChange()">Find Courses</button>
+      </div>
+    </section>
+
+    <section class="courses-section">
+      <div class="section-header">
+        <h2 id="courses-count">All Courses</h2>
+      </div>
+      <div class="courses-grid" id="courses-grid"></div>
+    </section>
+  </div>
+
+  <!-- ===================== PROGRESS PAGE ===================== -->
+  <div id="page-progress" class="page">
+    <div class="page-content">
+      <div class="page-title">My Learning Progress</div>
+      <div class="page-subtitle">Track your journey across all enrolled courses.</div>
+
+      <div class="progress-grid">
+        <div class="progress-card">
+          <div class="progress-card-header">
+            <div class="course-icon-sm banner-cs" style="border-radius:10px">🖥️</div>
+            <div>
+              <h3>Introduction to Computer Science</h3>
+              <div class="instructor">Dr. Sarah Mitchell</div>
+            </div>
+          </div>
+          <div class="big-progress">
+            <div class="circle-progress">
+              <svg viewBox="0 0 80 80" width="80" height="80">
+                <circle class="track" cx="40" cy="40" r="34" />
+                <circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="38.4" />
+              </svg>
+              <div class="circle-num">82%</div>
+            </div>
+            <div class="progress-topics">10 / 12 modules complete</div>
+          </div>
+          <div class="milestone-row">
+            <span class="milestone done">Intro ✓</span>
+            <span class="milestone done">Algorithms ✓</span>
+            <span class="milestone done">Data Structures ✓</span>
+            <span class="milestone pending">Capstone</span>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <div class="progress-card-header">
+            <div class="course-icon-sm banner-math" style="border-radius:10px">📐</div>
+            <div>
+              <h3>Calculus II</h3>
+              <div class="instructor">Prof. James Chen</div>
+            </div>
+          </div>
+          <div class="big-progress">
+            <div class="circle-progress">
+              <svg viewBox="0 0 80 80" width="80" height="80">
+                <circle class="track" cx="40" cy="40" r="34" />
+                <circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="96.1"
+                  stroke="#3498db" />
+              </svg>
+              <div class="circle-num">55%</div>
+            </div>
+            <div class="progress-topics">6 / 11 modules complete</div>
+          </div>
+          <div class="milestone-row">
+            <span class="milestone done">Limits ✓</span>
+            <span class="milestone done">Derivatives ✓</span>
+            <span class="milestone pending">Integration</span>
+            <span class="milestone pending">Series</span>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <div class="progress-card-header">
+            <div class="course-icon-sm banner-design" style="border-radius:10px">🎨</div>
+            <div>
+              <h3>UI/UX Design Fundamentals</h3>
+              <div class="instructor">Ms. Priya Sharma</div>
+            </div>
+          </div>
+          <div class="big-progress">
+            <div class="circle-progress">
+              <svg viewBox="0 0 80 80" width="80" height="80">
+                <circle class="track" cx="40" cy="40" r="34" />
+                <circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="128.2"
+                  stroke="#c9a84c" />
+              </svg>
+              <div class="circle-num">40%</div>
+            </div>
+            <div class="progress-topics">4 / 10 modules complete</div>
+          </div>
+          <div class="milestone-row">
+            <span class="milestone done">Basics ✓</span>
+            <span class="milestone done">Typography ✓</span>
+            <span class="milestone pending">Wireframing</span>
+            <span class="milestone pending">Prototyping</span>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <div class="progress-card-header">
+            <div class="course-icon-sm banner-bio" style="border-radius:10px">🧬</div>
+            <div>
+              <h3>Cell Biology</h3>
+              <div class="instructor">Dr. Ananya Roy</div>
+            </div>
+          </div>
+          <div class="big-progress">
+            <div class="circle-progress">
+              <svg viewBox="0 0 80 80" width="80" height="80">
+                <circle class="track" cx="40" cy="40" r="34" />
+                <circle class="fill" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="170.9"
+                  stroke="#c0512f" />
+              </svg>
+              <div class="circle-num">20%</div>
+            </div>
+            <div class="progress-topics">2 / 9 modules complete</div>
+          </div>
+          <div class="milestone-row">
+            <span class="milestone done">Cell Theory ✓</span>
+            <span class="milestone pending">Organelles</span>
+            <span class="milestone pending">Mitosis</span>
+            <span class="milestone pending">Genetics</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="max-width:600px">
+        <h3>Overall Statistics</h3>
+        <div class="stats-grid-3">
+          <div>
+            <div class="stat-value" style="color:var(--sage)">49h</div>
+            <div class="stat-label-sm">Total Study Time</div>
+          </div>
+          <div>
+            <div class="stat-value" style="color:var(--gold)">12</div>
+            <div class="stat-label-sm">Assignments Submitted</div>
+          </div>
+          <div>
+            <div class="stat-value" style="color:var(--rust)">B+</div>
+            <div class="stat-label-sm">Avg. Grade</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <div data-role="pagebar">
+  <!-- ===================== CONTACT PAGE ===================== -->
+  <div id="page-contact" class="page">
+    <div class="page-content">
+      <div class="page-title">Contact &amp; Support</div>
+      <div class="page-subtitle">We're here to help. Reach out to our team anytime.</div>
+
+      <div class="contact-grid">
+        <div class="contact-info">
+          <h2>Get in Touch</h2>
+          <p>Have questions about a course, need technical help, or want to partner with us? Our support team typically
+            responds within 24 hours.</p>
+
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div class="contact-item-text">
+              <strong>Email Support</strong>
+              <span>support@edulms.edu</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div class="contact-item-text">
+              <strong>Phone</strong>
+              <span>+91 98765 43210</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">🕐</div>
+            <div class="contact-item-text">
+              <strong>Hours</strong>
+              <span>Mon–Fri 9am–6pm IST</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div class="contact-item-text">
+              <strong>Address</strong>
+              <span>Amrita School of Computing, Coimbatore</span>
+            </div>
+          </div>
+
+          <div class="team-section">
+            <h3>Project Team</h3>
+            <div class="team-grid">
+              <div class="team-card">
+                <div class="team-avatar">MJ</div>
+                <div class="team-info">
+                  <strong>M. Puri Jagannadh</strong>
+                  <span>AM.SC.U4CSE25333</span>
+                  <div class="team-links">
+                    <a href="https://www.linkedin.com/in/m-puri-jagannadh-undefined-94372840a/" target="_blank"
+                      rel="noopener noreferrer" class="team-link linkedin">💼 LinkedIn</a>
+                    <a href="https://purijagannadh22.github.io/portfolio/" target="_blank" rel="noopener noreferrer"
+                      class="team-link portfolio">🌐 Portfolio</a>
+                  </div>
+                </div>
+              </div>
+              <div class="team-card">
+                <div class="team-avatar">AS</div>
+                <div class="team-info">
+                  <strong>Aditya Sai Raghavendra</strong>
+                  <span>AM.SC.U4CSE25369</span>
+                  <div class="team-links">
+                    <a href="https://www.linkedin.com/in/aditya-sai" target="_blank" rel="noopener noreferrer"
+                      class="team-link linkedin">💼 LinkedIn</a>
+                    <a href="https://adityasairaghavendra27-oss.github.io/Portfolio/" target="_blank"
+                      rel="noopener noreferrer" class="team-link portfolio">🌐 Portfolio</a>
+                  </div>
+                </div>
+              </div>
+              <div class="team-card">
+                <div class="team-avatar">EK</div>
+                <div class="team-info">
+                  <strong>Endala Kushal</strong>
+                  <span>AM.SC.U4CSE25364</span>
+                  <div class="team-links">
+                    <a href="https://www.linkedin.com/in/kushal-endala-89a638392/" target="_blank"
+                      rel="noopener noreferrer" class="team-link linkedin">💼 LinkedIn</a>
+                    <a href="https://kushalendala.github.io/Portfolio-Kushal/" target="_blank" rel="noopener noreferrer"
+                      class="team-link portfolio">🌐 Portfolio</a>
+                  </div>
+                </div>
+              </div>
+              <div class="team-card">
+                <div class="team-avatar">MG</div>
+                <div class="team-info">
+                  <strong>M. Gautham</strong>
+                  <span>AM.SC.U4CSE25365</span>
+                  <div class="team-links">
+                    <a href="https://www.linkedin.com/in/gautham-nani-4237a7388/" target="_blank"
+                      rel="noopener noreferrer" class="team-link linkedin">💼 LinkedIn</a>
+                    <a href="https://gauthammareedu123-dev.github.io/port/" target="_blank" rel="noopener noreferrer"
+                      class="team-link portfolio">🌐 Portfolio</a>
+                  </div>
+                </div>
+              </div>
+              <div class="team-card">
+                <div class="team-avatar">VV</div>
+                <div class="team-info">
+                  <strong>Venkata Vinay</strong>
+                  <span>AM.SC.U4CSE25336</span>
+                  <div class="team-links">
+                    <a href="https://www.linkedin.com/in/venkatavinay-narra-3b897140a//" target="_blank"
+                      rel="noopener noreferrer" class="team-link linkedin">💼 LinkedIn</a>
+                    <a href="https://narravenkatavinay24.github.io/UID-Project-Portfolio-/" target="_blank"
+                      rel="noopener noreferrer" class="team-link portfolio">🌐 Portfolio</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form">
+          <h3 class="mb-0" style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:24px">Send us a message</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" placeholder="Arjun">
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" placeholder="Sharma">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="arjun@email.com">
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <select>
+              <option>Technical Support</option>
+              <option>Course Enrollment</option>
+              <option>Billing &amp; Payments</option>
+              <option>Content Feedback</option>
+              <option>Partnership</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea rows="5" placeholder="Describe your question or issue..."></textarea>
+          </div>
+          <button class="btn btn-primary btn-lg"
+            onclick="showToast('✅ Message sent! We\'ll be in touch within 24 hours.')">Send Message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== ABOUT PAGE ===================== -->
+  <div id="page-about" class="page">
+    <div class="about-hero">
+      <h1>About EduLMS</h1>
+      <p>A comprehensive learning management platform built to empower students and educators worldwide.</p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="icon">🎓</div>
+        <h3>World-Class Content</h3>
+        <p>Access 248+ curated courses across Computer Science, Mathematics, Design, Biology, Literature and more —
+          crafted by expert educators.</p>
+      </div>
+      <div class="about-card">
+        <div class="icon">📈</div>
+        <h3>Track Your Progress</h3>
+        <p>Real-time progress dashboards, milestone tracking, and analytics help you stay on top of your learning
+          journey.</p>
+      </div>
+      <div class="about-card">
+        <div class="icon">🤝</div>
+        <h3>Collaborative Learning</h3>
+        <p>Discussion forums, peer reviews, and group projects create a vibrant community of learners supporting each
+          other.</p>
+      </div>
+      <div class="about-card">
+        <div class="icon">🔒</div>
+        <h3>Secure &amp; Compliant</h3>
+        <p>GDPR and FERPA compliant with full HTTPS encryption, OAuth 2.0 authentication, and robust data protection.
+        </p>
+      </div>
+      <div class="about-card">
+        <div class="icon">📱</div>
+        <h3>Mobile Friendly</h3>
+        <p>Learn anywhere, anytime. Our responsive design works perfectly across desktops, tablets, and mobile devices.
+        </p>
+      </div>
+      <div class="about-card">
+        <div class="icon">⚡</div>
+        <h3>High Performance</h3>
+        <p>99.5% uptime SLA, sub-3-second load times, and support for 10,000+ concurrent users — built for scale.</p>
+      </div>
+    </div>
+
+    <!-- Team Section on About Page -->
+    <div class="about-team-section">
+      <div class="about-team-title">Meet the Team</div>
+      <p class="about-team-subtitle">This platform was designed and built by a group of CSE students at Amrita School of
+        Computing.</p>
+      <div class="about-team-grid">
+        <div class="about-team-card">
+          <div class="about-avatar">MJ</div>
+          <div class="about-member-name">M. Puri Jagannadh</div>
+          <div class="about-member-id">AM.SC.U4CSE25333</div>
+          <div class="about-member-links">
+            <a href="https://www.linkedin.com/in/m-puri-jagannadh-undefined-94372840a/" target="_blank"
+              rel="noopener noreferrer">💼 LinkedIn</a>
+            <a href="https://purijagannadh22.github.io/portfolio/" target="_blank" rel="noopener noreferrer">🌐
+              Portfolio</a>
+          </div>
+        </div>
+        <div class="about-team-card">
+          <div class="about-avatar">AS</div>
+          <div class="about-member-name">Aditya Sai Raghavendra</div>
+          <div class="about-member-id">AM.SC.U4CSE25369</div>
+          <div class="about-member-links">
+            <a href="https://www.linkedin.com/in/aditya-sai" target="_blank" rel="noopener noreferrer">💼 LinkedIn</a>
+            <a href="https://adityasairaghavendra27-oss.github.io/Portfolio/" target="_blank"
+              rel="noopener noreferrer">🌐 Portfolio</a>
+          </div>
+        </div>
+        <div class="about-team-card">
+          <div class="about-avatar">EK</div>
+          <div class="about-member-name">Endala Kushal</div>
+          <div class="about-member-id">AM.SC.U4CSE25364</div>
+          <div class="about-member-links">
+            <a href="https://www.linkedin.com/in/kushal-endala-89a638392/" target="_blank" rel="noopener noreferrer">💼
+              LinkedIn</a>
+            <a href="https://kushalendala.github.io/Portfolio-Kushal/" target="_blank" rel="noopener noreferrer">🌐
+              Portfolio</a>
+          </div>
+        </div>
+        <div class="about-team-card">
+          <div class="about-avatar">MG</div>
+          <div class="about-member-name">M. Gautham</div>
+          <div class="about-member-id">AM.SC.U4CSE25365</div>
+          <div class="about-member-links">
+            <a href="https://www.linkedin.com/in/gautham-nani-4237a7388/" target="_blank" rel="noopener noreferrer">💼
+              LinkedIn</a>
+            <a href="https://gauthammareedu123-dev.github.io/port/" target="_blank" rel="noopener noreferrer">🌐
+              Portfolio</a>
+          </div>
+        </div>
+        <div class="about-team-card">
+          <div class="about-avatar">VV</div>
+          <div class="about-member-name">Venkata Vinay</div>
+          <div class="about-member-id">AM.SC.U4CSE25336</div>
+          <div class="about-member-links">
+            <a href="https://narravenkatavinay24.github.io/UID-Project-Portfolio-/" target="_blank"
+              rel="noopener noreferrer">🌐 Portfolio</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div class="about-team-title">Frequently Asked Questions</div>
+      <div class="faq-section">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">How do I enroll in a course? <span class="faq-chevron">▾</span></div>
+          <div class="faq-answer">Browse courses from the Courses page, filter by category or level, and click "Enroll
+            Now" on any open course. You'll get instant access to all materials.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">Can I access courses on mobile? <span class="faq-chevron">▾</span></div>
+          <div class="faq-answer">Absolutely! EduLMS is fully responsive and works seamlessly on any device — phones,
+            tablets, and desktops.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">How are assignments graded? <span class="faq-chevron">▾</span></div>
+          <div class="faq-answer">Instructors manually grade written assignments with rubric-based feedback. Quizzes and
+            MCQ tests are auto-graded with instant results.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">Is my data secure? <span class="faq-chevron">▾</span></div>
+          <div class="faq-answer">Yes. All data is encrypted via HTTPS/TLS, the platform is GDPR &amp; FERPA compliant,
+            and student records are retained for 7 years per educational regulations.</div>
+        </div>
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">How do I contact support? <span class="faq-chevron">▾</span></div>
+          <div class="faq-answer">Visit our Contact page to send a message, or email support@edulms.edu. Our team
+            responds within 24 hours on business days.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SIGN IN PAGE ===================== -->
+  <div id="page-signin" class="page">
+    <div class="signin-wrapper">
+      <div class="card signin-card">
+        <div class="signin-header">
+          <h1>Welcome Back</h1>
+          <p class="page-subtitle">Sign in to continue your learning journey</p>
+        </div>
+
+        <form id="signinForm">
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="name@example.com" required>
+          </div>
+          <div class="form-group">
+            <div class="password-label-row">
+              <label class="mb-0">Password</label>
+              <a href="#" onclick="showToast('Password reset link sent to your email!')" class="forgot-password">Forgot Password?</a>
+            </div>
+            <input type="password" placeholder="••••••••" required>
+          </div>
+          
+          <div class="checkbox-group">
+            <input type="checkbox" id="remember">
+            <label for="remember">Remember me</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+        </form>
+
+        <div class="divider">
+          <div class="divider-line"></div>
+          <span>or</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <button class="btn btn-outline btn-full" style="gap: 10px;" onclick="showToast('Connecting to Google...')">
+          <img src="https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png" width="18" alt="Google">
+          Continue with Google
+        </button>
+
+        <div class="signup-footer">
+          Don’t have an account? <a href="#" onclick="showToast('Registration is currently closed.')">Create one</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PLACEHOLDER PAGES ===================== -->
+  <div id="page-assignments" class="page">
+    <div class="page-content">
+      <button class="btn btn-outline btn-sm" onclick="showPage('dashboard')" style="margin-bottom: 24px;">← Back to Dashboard</button>
+      <div class="page-title">Assignments</div>
+      <div class="page-subtitle">Manage your coursework and track submission deadlines.</div>
+
+      <div class="card" style="margin-bottom: 24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <h3 style="margin:0">Upcoming Assignments</h3>
+          <div class="course-tag tag-open">2 Pending</div>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-dot dot-rust"></div>
+          <div style="flex:1">
+            <div class="activity-text"><strong>Data Structures — Binary Search Trees</strong><br>Due: May 20, 2026</div>
+            <div class="activity-time">Weight: 15% of total grade</div>
+          </div>
+          <button class="btn btn-sage btn-sm">Submit</button>
+        </div>
+
+        <div class="activity-item">
+          <div class="activity-dot dot-gold"></div>
+          <div style="flex:1">
+            <div class="activity-text"><strong>Calculus II — Integration Methods</strong><br>Due: May 22, 2026</div>
+            <div class="activity-time">Weight: 10% of total grade</div>
+          </div>
+          <button class="btn btn-sage btn-sm">Submit</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:20px">Recently Graded</h3>
+        <div class="activity-item">
+          <div class="activity-dot dot-sage"></div>
+          <div style="flex:1">
+            <div class="activity-text"><strong>UI/UX Design — User Persona Project</strong><br>Grade: 95/100</div>
+            <div class="activity-time">Feedback: "Excellent work on user research!"</div>
+          </div>
+          <button class="btn btn-outline btn-sm">View Feedback</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-schedule" class="page">
+    <div class="page-content">
+      <button class="btn btn-outline btn-sm" onclick="showPage('dashboard')" style="margin-bottom: 24px;">← Back to Dashboard</button>
+      <div class="page-title">Class Schedule</div>
+      <div class="page-subtitle">Your weekly learning roadmap.</div>
+
+      <div class="card">
+        <div class="progress-item">
+          <div class="progress-header">
+            <strong>Monday, May 18</strong>
+          </div>
+          <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; gap:16px; align-items:center; padding:12px; background:var(--cream); border-radius:8px;">
+              <div style="font-weight:700; color:var(--sage); width:80px;">09:00 AM</div>
+              <div>
+                <div style="font-weight:600;">Introduction to CS</div>
+                <div style="font-size:12px; color:var(--muted);">Room 402 • Dr. Mitchell</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:16px; align-items:center; padding:12px; background:var(--cream); border-radius:8px;">
+              <div style="font-weight:700; color:var(--sage); width:80px;">11:30 AM</div>
+              <div>
+                <div style="font-weight:600;">Calculus II</div>
+                <div style="font-size:12px; color:var(--muted);">Room 105 • Prof. Chen</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-item" style="margin-top:32px;">
+          <div class="progress-header">
+            <strong>Tuesday, May 19</strong>
+          </div>
+          <div style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; gap:16px; align-items:center; padding:12px; background:var(--cream); border-radius:8px;">
+              <div style="font-weight:700; color:var(--sage); width:80px;">10:00 AM</div>
+              <div>
+                <div style="font-weight:600;">UI/UX Design</div>
+                <div style="font-size:12px; color:var(--muted);">Design Lab • Ms. Sharma</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-discussions" class="page">
+    <div class="page-content">
+      <button class="btn btn-outline btn-sm" onclick="showPage('dashboard')" style="margin-bottom: 24px;">← Back to Dashboard</button>
+      <div class="page-title">Discussion Forums</div>
+      <div class="page-subtitle">Collaborate and learn with your peers.</div>
+
+      <div style="display:grid; grid-template-columns: 250px 1fr; gap:24px;">
+        <aside>
+          <div class="card" style="padding:16px;">
+            <button class="btn btn-primary btn-full" style="margin-bottom:16px;">New Topic</button>
+            <div class="sidebar-section-title">Categories</div>
+            <div class="sidebar-item active">General Help</div>
+            <div class="sidebar-item">CS Study Group</div>
+            <div class="sidebar-item">Design Critique</div>
+            <div class="sidebar-item">Mathematics</div>
+          </div>
+        </aside>
+        
+        <main>
+          <div class="card">
+            <div class="activity-item" style="cursor:pointer" onclick="showToast('Loading discussion thread...')">
+              <div class="avatar-mini" style="background:var(--sage)">JS</div>
+              <div style="flex:1">
+                <div class="activity-text"><strong>How to implement Dijkstra's in Python?</strong></div>
+                <div class="activity-time">Started by John Smith • 12 replies</div>
+              </div>
+              <div class="course-tag tag-open">Active</div>
+            </div>
+            
+            <div class="activity-item" style="cursor:pointer" onclick="showToast('Loading discussion thread...')">
+              <div class="avatar-mini" style="background:var(--gold)">AK</div>
+              <div style="flex:1">
+                <div class="activity-text"><strong>Resources for typography in UI?</strong></div>
+                <div class="activity-time">Started by Anna K. • 8 replies</div>
+              </div>
+              <div class="course-tag tag-open">Active</div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-announcements" class="page">
+    <div class="page-content">
+      <button class="btn btn-outline btn-sm" onclick="showPage('dashboard')" style="margin-bottom: 24px;">← Back to Dashboard</button>
+      <div class="page-title">Announcements</div>
+      <div class="page-subtitle">Stay updated with the latest news from your instructors.</div>
+
+      <div class="card" style="margin-bottom:20px; border-left: 4px solid var(--gold);">
+        <div style="display:flex; justify-content:space-between; align-items:start;">
+          <div>
+            <h3 style="margin:0; color:var(--ink);">Midterm Exam Schedule Released</h3>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">Posted by Academic Office • May 14, 2026</div>
+          </div>
+          <span class="course-tag tag-open">Important</span>
+        </div>
+        <p style="margin-top:16px; line-height:1.6;">The midterm exam schedule for the Spring 2026 semester has been finalized. Please check the student portal for your specific exam dates and locations.</p>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:start;">
+          <div>
+            <h3 style="margin:0; color:var(--ink);">New Guest Lecture: Future of AI</h3>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">Posted by Dr. Mitchell • May 12, 2026</div>
+          </div>
+        </div>
+        <p style="margin-top:16px; line-height:1.6;">We are excited to host Dr. Elena V. for a guest lecture on the ethical implications of AI in modern software development. Join us this Friday at 4 PM.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-settings" class="page">
+    <div class="page-content">
+      <button class="btn btn-outline btn-sm" onclick="showPage('dashboard')" style="margin-bottom: 24px;">← Back to Dashboard</button>
+      <div class="page-title">Account Settings</div>
+      <div class="page-subtitle">Manage your profile, security, and notification preferences.</div>
+
+      <div class="card" style="max-width: 800px;">
+        <div class="sidebar-section-title">Profile Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" value="Student Learner">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" value="student@edulms.edu">
+          </div>
+        </div>
+
+        <div class="sidebar-section-title" style="margin-top:32px;">Notifications</div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="set-email" checked>
+          <label for="set-email">Email notifications for new assignments</label>
+        </div>
+        <div class="checkbox-group">
+          <input type="checkbox" id="set-push" checked>
+          <label for="set-push">Push notifications for announcements</label>
+        </div>
+
+        <div style="margin-top:40px; display:flex; gap:16px;">
+          <button class="btn btn-primary" onclick="showToast('Settings saved successfully!')">Save Changes</button>
+          <button class="btn btn-outline" onclick="showPage('dashboard')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-faq" class="page">
+    <div class="page-content">
+      <h1 class="page-title">FAQs</h1>
+      <p class="page-subtitle">Frequently Asked Questions</p>
+      
+      <div class="faq-section mt-32">
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-question">How do I enroll in a course? <span class="faq-chevron">▾</span></div>
+          <div class="faq-answer">Browse courses from the Courses page, filter by category or level, and click "Enroll Now" on any open course.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-details" class="page">
+    <div class="page-content">
+      <button class="btn btn-outline btn-sm" onclick="showPage('courses')" style="margin-bottom: 24px;">← Back to Courses</button>
+      <div id="course-details-view">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL FOOTER -->
+  <footer data-role="pagebar">
     <span data-role="brandname">EduLMS</span>
     <div data-role="navlinks">
       <a onclick="showPage('about')">About Us</a>
-      <a onclick="showPage('about')">FAQs</a>
+      <a onclick="showPage('faq')">FAQs</a>
       <a onclick="showPage('contact')">Support</a>
     </div>
-  </div>
-</div>
+  </footer>
 
-<!-- ===================== ABOUT PAGE ===================== -->
-<div id="page-about" class="page">
-  <div class="about-hero">
-    <h1>About EduLMS</h1>
-    <p>A comprehensive learning management platform built to empower students and educators worldwide.</p>
-  </div>
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
 
-  <div class="about-grid">
-    <div class="about-card">
-      <div class="icon">🎓</div>
-      <h3>World-Class Content</h3>
-      <p>Access 248+ curated courses across Computer Science, Mathematics, Design, Biology, Literature and more — crafted by expert educators.</p>
-    </div>
-    <div class="about-card">
-      <div class="icon">📈</div>
-      <h3>Track Your Progress</h3>
-      <p>Real-time progress dashboards, milestone tracking, and analytics help you stay on top of your learning journey.</p>
-    </div>
-    <div class="about-card">
-      <div class="icon">🤝</div>
-      <h3>Collaborative Learning</h3>
-      <p>Discussion forums, peer reviews, and group projects create a vibrant community of learners supporting each other.</p>
-    </div>
-    <div class="about-card">
-      <div class="icon">🔒</div>
-      <h3>Secure &amp; Compliant</h3>
-      <p>GDPR and FERPA compliant with full HTTPS encryption, OAuth 2.0 authentication, and robust data protection.</p>
-    </div>
-    <div class="about-card">
-      <div class="icon">📱</div>
-      <h3>Mobile Friendly</h3>
-      <p>Learn anywhere, anytime. Our responsive design works perfectly across desktops, tablets, and mobile devices.</p>
-    </div>
-    <div class="about-card">
-      <div class="icon">⚡</div>
-      <h3>High Performance</h3>
-      <p>99.5% uptime SLA, sub-3-second load times, and support for 10,000+ concurrent users — built for scale.</p>
-    </div>
-  </div>
-
-  <!-- Team Section on About Page -->
-  <div class="about-team-section">
-    <div class="about-team-title">Meet the Team</div>
-    <p class="about-team-subtitle">This platform was designed and built by a group of CSE students at Amrita School of Computing.</p>
-    <div class="about-team-grid">
-      <div class="about-team-card">
-        <div class="about-avatar">MJ</div>
-        <div class="about-member-name">M. Puri Jagannadh</div>
-        <div class="about-member-id">AM.SC.U4CSE25333</div>
-        <div class="about-member-links">
-          <a href="https://www.linkedin.com/in/m-puri-jagannadh-undefined-94372840a/" target="_blank">💼 LinkedIn</a>
-          <a href="https://purijagannadh22.github.io/portfolio/" target="_blank">🌐 Portfolio</a>
-        </div>
-      </div>
-      <div class="about-team-card">
-        <div class="about-avatar">AS</div>
-        <div class="about-member-name">Aditya Sai Raghavendra</div>
-        <div class="about-member-id">AM.SC.U4CSE25369</div>
-        <div class="about-member-links">
-          <a href="https://www.linkedin.com/in/aditya-sai" target="_blank">💼 LinkedIn</a>
-          <a href="https://adityasairaghavendra27-oss.github.io/Portfolio/" target="_blank">🌐 Portfolio</a>
-        </div>
-      </div>
-      <div class="about-team-card">
-        <div class="about-avatar">EK</div>
-        <div class="about-member-name">Endala Kushal</div>
-        <div class="about-member-id">AM.SC.U4CSE25364</div>
-        <div class="about-member-links">
-          <a href="https://www.linkedin.com/in/kushal-endala-89a638392/" target="_blank">💼 LinkedIn</a>
-          <a href="https://kushalendala.github.io/Portfolio-Kushal/" target="_blank">🌐 Portfolio</a>
-        </div>
-      </div>
-      <div class="about-team-card">
-        <div class="about-avatar">MG</div>
-        <div class="about-member-name">M. Gowtham</div>
-        <div class="about-member-id">AM.SC.U4CSE25365</div>
-        <div class="about-member-links">
-          <a href="https://www.linkedin.com/in/gautham-nani-4237a7388/" target="_blank">💼 LinkedIn</a>
-          <a href="https://gauthammareedu123-dev.github.io/port/" target="_blank">🌐 Portfolio</a>
-        </div>
-      </div>
-      <div class="about-team-card">
-        <div class="about-avatar">VV</div>
-        <div class="about-member-name">Venkata Vinay</div>
-        <div class="about-member-id">AM.SC.U4CSE25336</div>
-        <div class="about-member-links">
-          <a href="https://narravenkatavinay24.github.io/UID-Project-Portfolio-/" target="_blank">🌐 Portfolio</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div style="padding: 0 40px 48px">
-    <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:24px">Frequently Asked Questions</div>
-    <div class="faq-section">
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">How do I enroll in a course? <span class="faq-chevron">▾</span></div>
-        <div class="faq-answer">Browse courses from the Courses page, filter by category or level, and click "Enroll Now" on any open course. You'll get instant access to all materials.</div>
-      </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">Can I access courses on mobile? <span class="faq-chevron">▾</span></div>
-        <div class="faq-answer">Absolutely! EduLMS is fully responsive and works seamlessly on any device — phones, tablets, and desktops.</div>
-      </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">How are assignments graded? <span class="faq-chevron">▾</span></div>
-        <div class="faq-answer">Instructors manually grade written assignments with rubric-based feedback. Quizzes and MCQ tests are auto-graded with instant results.</div>
-      </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">Is my data secure? <span class="faq-chevron">▾</span></div>
-        <div class="faq-answer">Yes. All data is encrypted via HTTPS/TLS, the platform is GDPR &amp; FERPA compliant, and student records are retained for 7 years per educational regulations.</div>
-      </div>
-      <div class="faq-item" onclick="toggleFaq(this)">
-        <div class="faq-question">How do I contact support? <span class="faq-chevron">▾</span></div>
-        <div class="faq-answer">Visit our Contact page to send a message, or email support@edulms.edu. Our team responds within 24 hours on business days.</div>
-      </div>
-    </div>
-  </div>
-
-  <div data-role="pagebar">
-    <span data-role="brandname">EduLMS</span>
-    <div data-role="navlinks">
-      <a onclick="showPage('about')">About Us</a>
-      <a onclick="showPage('about')">FAQs</a>
-      <a onclick="showPage('contact')">Support</a>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>

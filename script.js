@@ -1,4 +1,10 @@
 
+/**
+ * EduLMS – Application Logic
+ * Refactored for performance, security, and maintainability.
+ */
+
+// --- DATA ---
 const courses = [
   {
     id: 1,
@@ -14,7 +20,9 @@ const courses = [
     enrollment: 'Open',
     students: 342,
     weeks: 12,
-    enrolled: true
+    enrolled: true,
+    longDesc: 'This course provides a comprehensive introduction to the fundamental concepts of computer science. Students will learn about algorithms, data structures, software engineering, and web development. No prior experience is required.',
+    source: 'https://github.com/topics/computer-science'
   },
   {
     id: 2,
@@ -30,7 +38,9 @@ const courses = [
     enrollment: 'Open',
     students: 189,
     weeks: 11,
-    enrolled: true
+    enrolled: true,
+    longDesc: 'A continuation of Calculus I, covering integration techniques, applications of integration, sequences, series, and an introduction to multivariable functions.',
+    source: 'https://ocw.mit.edu/courses/mathematics/'
   },
   {
     id: 3,
@@ -46,7 +56,9 @@ const courses = [
     enrollment: 'Open',
     students: 271,
     weeks: 10,
-    enrolled: true
+    enrolled: true,
+    longDesc: 'Master the principles of user interface and user experience design. Learn to create intuitive, beautiful, and functional digital products through hands-on projects.',
+    source: 'https://www.behance.net/live/ui-ux-design'
   },
   {
     id: 4,
@@ -62,7 +74,9 @@ const courses = [
     enrollment: 'Closed',
     students: 98,
     weeks: 9,
-    enrolled: true
+    enrolled: true,
+    longDesc: 'An in-depth study of cellular processes, including metabolism, signaling, and genetic expression. Focus on the molecular mechanisms that govern life at the cellular level.',
+    source: 'https://www.nature.com/scitable/topicpage/what-is-a-cell-14023377/'
   },
   {
     id: 5,
@@ -78,7 +92,9 @@ const courses = [
     enrollment: 'Open',
     students: 156,
     weeks: 14,
-    enrolled: false
+    enrolled: false,
+    longDesc: 'Survey of the most influential literary works and movements of the 20th century, exploring themes of identity, globalization, and social change across various cultures.',
+    source: 'https://www.gutenberg.org/'
   },
   {
     id: 6,
@@ -94,142 +110,318 @@ const courses = [
     enrollment: 'Open',
     students: 412,
     weeks: 16,
-    enrolled: false
+    enrolled: false,
+    longDesc: 'Comprehensive guide to data science using Python. Learn libraries like Pandas, Scikit-Learn, and Matplotlib to analyze data and build predictive models.',
+    source: 'https://www.kaggle.com/learn'
   }
 ];
 
+// --- APP STATE ---
+const App = {
+  state: {
+    currentPage: 'home',
+    toastTimer: null,
+    filters: {
+      q: '',
+      cat: '',
+      lvl: '',
+      open: true,
+      closed: true
+    }
+  },
 
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  // DOM Cache
+  elements: {
+    pages: null,
+    toast: null,
+    grids: {
+      home: null,
+      courses: null
+    },
+    detailsView: null,
+    navLinksContainer: null
+  },
 
-  document.getElementById('page-' + name).classList.add('active');
+  init() {
+    console.log('🚀 EduLMS Initializing...');
+    
+    // Cache Elements
+    this.elements.pages = document.querySelectorAll('.page');
+    this.elements.toast = document.getElementById('toast');
+    this.elements.grids.home = document.getElementById('home-courses-grid');
+    this.elements.grids.courses = document.getElementById('courses-grid');
+    this.elements.detailsView = document.getElementById('course-details-view');
+    this.elements.navLinksContainer = document.querySelector('.nav-links');
 
-  const navEl = document.getElementById('nav-' + name);
-  if (navEl) navEl.classList.add('active');
+    // Bind Events
+    this.bindEvents();
 
-  window.scrollTo(0, 0);
+    // Initial Routing
+    const initialPage = window.location.hash.replace('#', '') || 'home';
+    this.showPage(initialPage, true);
+  },
 
-  if (name === 'home')    renderHomeGrid(courses);
-  if (name === 'courses') renderCoursesGrid(courses);
-}
+  bindEvents() {
+    // Hash Change
+    window.addEventListener('hashchange', () => {
+      const pageId = window.location.hash.replace('#', '') || 'home';
+      if (pageId !== this.state.currentPage) {
+        this.showPage(pageId);
+      }
+    });
 
-function renderCard(c) {
-  return `
-    <div class="course-card fade-up">
-      <div class="course-banner ${c.banner}">
-        <span style="position:relative;z-index:1;font-size:52px">${c.emoji}</span>
-      </div>
-      <div class="course-body">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-          <span class="course-tag ${c.enrollment === 'Open' ? 'tag-open' : 'tag-closed'}">${c.enrollment}</span>
-          <span style="font-size:11px;color:var(--muted);font-weight:500">${c.level}</span>
-          ${c.enrolled ? '<span class="enrolled-badge">Enrolled</span>' : ''}
-        </div>
-        <h3>${c.title}</h3>
-        <p>${c.desc}</p>
-        <div class="course-meta">
-          <span class="meta-item">👥 ${c.students} students</span>
-          <span class="meta-item">📅 ${c.weeks} weeks</span>
-          <span class="meta-item">🏷️ ${c.category}</span>
-        </div>
-        <div class="course-footer">
-          <div class="instructor-mini">
-            <div class="avatar-mini" style="background:${c.color}">${c.initials}</div>
-            <span class="avatar-mini-name">${c.instructor}</span>
+    // Form Handling
+    document.addEventListener('submit', (e) => {
+      if (e.target.id === 'signinForm') {
+        e.preventDefault();
+        this.showToast('Successfully signed in!');
+        setTimeout(() => this.showPage('dashboard'), 1000);
+      }
+    });
+    
+    // Filter Inputs
+    const filterInputs = [
+      'home-search', 'filter-category', 'filter-level', 'check-open', 'check-closed',
+      'courses-search', 'cp-category', 'cp-level', 'cp-open', 'cp-closed'
+    ];
+    
+    filterInputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        const eventType = el.tagName === 'INPUT' && el.type === 'text' ? 'input' : 'change';
+        el.addEventListener(eventType, () => this.handleFilterChange());
+      }
+    });
+  },
+
+  toggleMobileMenu() {
+    if (this.elements.navLinksContainer) {
+      this.elements.navLinksContainer.classList.toggle('show');
+    }
+  },
+
+  // --- NAVIGATION ---
+  showPage(pageId, isInitial = false) {
+    const targetPage = document.getElementById('page-' + pageId);
+    if (!targetPage) {
+      console.error(`Page "${pageId}" not found.`);
+      return;
+    }
+
+    this.state.currentPage = pageId;
+
+    // UI Updates
+    this.elements.pages.forEach(p => p.classList.remove('active'));
+    targetPage.classList.add('active');
+
+    // Close mobile menu on navigation
+    if (this.elements.navLinksContainer) {
+      this.elements.navLinksContainer.classList.remove('show');
+    }
+
+    // Update URL hash safely
+    if (window.location.hash !== '#' + pageId) {
+      window.history.pushState(null, '', '#' + pageId);
+    }
+
+    // Sync Active States for all links
+    this.syncActiveLinks(pageId);
+
+    // Scroll to Top
+    if (!isInitial) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Render Logic
+    if (pageId === 'home') this.renderHomeGrid();
+    if (pageId === 'courses') this.renderCoursesGrid();
+  },
+
+  syncActiveLinks(pageId) {
+    document.querySelectorAll('[onclick*="showPage"]').forEach(el => {
+      if (el.getAttribute('onclick').includes(`'${pageId}'`)) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+  },
+
+  showDetails(id) {
+    const c = courses.find(x => x.id === id);
+    if (!c) return;
+
+    if (this.elements.detailsView) {
+      this.elements.detailsView.innerHTML = `
+        <div class="card fade-up">
+          <div class="course-banner ${c.banner}" style="height: 200px; border-radius: 12px; margin-bottom: 24px;">
+            <span style="font-size: 80px;">${c.emoji}</span>
           </div>
-          ${
-            c.enrollment === 'Open' && !c.enrolled
-              ? `<button class="btn btn-sage btn-sm" onclick="enrollCourse(${c.id}, event)">Enroll Now</button>`
-              : c.enrolled
-              ? `<button class="btn btn-outline btn-sm" onclick="showPage('progress')">Continue →</button>`
-              : `<button class="btn btn-outline btn-sm" disabled style="opacity:0.5;cursor:not-allowed">Closed</button>`
-          }
+          <h1 class="page-title">${c.title}</h1>
+          <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+            <span class="course-tag ${c.enrollment === 'Open' ? 'tag-open' : 'tag-closed'}">${c.enrollment}</span>
+            <span class="enrolled-badge" style="margin:0">${c.level}</span>
+          </div>
+          <p style="font-size: 18px; line-height: 1.6; color: var(--ink); margin-bottom: 32px;">${c.longDesc}</p>
+          
+          <div class="stats-row" style="margin-bottom: 32px;">
+             <div class="stat-box">
+               <div class="stat-icon icon-sage">👥</div>
+               <div class="stat-box-info">
+                 <div class="stat-box-num">${c.students}</div>
+                 <div class="stat-box-label">Students</div>
+               </div>
+             </div>
+             <div class="stat-box">
+               <div class="stat-icon icon-gold">📅</div>
+               <div class="stat-box-info">
+                 <div class="stat-box-num">${c.weeks}</div>
+                 <div class="stat-box-label">Weeks</div>
+               </div>
+             </div>
+          </div>
+
+          <div class="card" style="background: var(--cream); border-color: var(--border);">
+            <div class="instructor-mini">
+              <div class="avatar-mini" style="width:48px; height:48px; font-size:18px; background:${c.color}">${c.initials}</div>
+              <div>
+                <div style="font-weight:700; color:var(--ink)">${c.instructor}</div>
+                <div style="font-size:13px; color:var(--muted)">Lead Instructor</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap;">
+            ${this.getButtonHTML(c, true)}
+            <a href="${c.source}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg" onclick="event.stopPropagation()">View Source 🌐</a>
+            <button class="btn btn-outline btn-lg" onclick="showToast('Course outline coming soon!')">Download Syllabus</button>
+          </div>
+        </div>
+      `;
+    }
+
+    this.showPage('details');
+  },
+
+  // --- RENDERING ---
+  renderCard(c) {
+    return `
+      <div class="course-card fade-up" onclick="App.showDetails(${c.id})">
+        <div class="course-banner ${c.banner}">
+          <span style="position:relative;z-index:1;font-size:52px">${c.emoji}</span>
+        </div>
+        <div class="course-body">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span class="course-tag ${c.enrollment === 'Open' ? 'tag-open' : 'tag-closed'}">${c.enrollment}</span>
+            <span style="font-size:11px;color:var(--muted);font-weight:500">${c.level}</span>
+            ${c.enrolled ? '<span class="enrolled-badge">Enrolled</span>' : ''}
+          </div>
+          <h3>${c.title}</h3>
+          <p>${c.desc}</p>
+          <div class="course-meta">
+            <span class="meta-item">👥 ${c.students} students</span>
+            <span class="meta-item">📅 ${c.weeks} weeks</span>
+            <span class="meta-item">🏷️ ${c.category}</span>
+          </div>
+          <div class="course-footer">
+            <div class="instructor-mini">
+              <div class="avatar-mini" style="background:${c.color}">${c.initials}</div>
+              <span class="avatar-mini-name">${c.instructor}</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <a href="${c.source}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm" onclick="event.stopPropagation()" title="View Source">Source</a>
+              ${this.getButtonHTML(c)}
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  `;
-}
+    `;
+  },
 
-function renderHomeGrid(list) {
-  const el = document.getElementById('home-courses-grid');
-  if (!el) return;
-  const featured = list.slice(0, 3);
-  el.innerHTML = featured.length
-    ? featured.map(c => renderCard(c)).join('')
-    : '<p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:40px">No courses match your search.</p>';
-}
+  getButtonHTML(c, isLarge = false) {
+    const btnClass = isLarge ? 'btn-lg' : 'btn-sm';
+    if (c.enrolled) {
+      return `<button class="btn btn-outline ${btnClass}" onclick="event.stopPropagation(); showPage('progress')">View Progress</button>`;
+    }
+    if (c.enrollment === 'Closed') {
+      return `<button class="btn btn-outline ${btnClass}" disabled style="opacity:0.5;cursor:not-allowed" onclick="event.stopPropagation()">Closed</button>`;
+    }
+    return `<button class="btn btn-sage ${btnClass}" onclick="event.stopPropagation(); App.enrollCourse(${c.id})">Enroll Now</button>`;
+  },
 
-function renderCoursesGrid(list) {
-  const el    = document.getElementById('courses-grid');
-  const count = document.getElementById('courses-count');
-  if (!el) return;
-  el.innerHTML = list.length
-    ? list.map(c => renderCard(c)).join('')
-    : '<p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:40px">No courses match your filters.</p>';
-  if (count) count.textContent = `${list.length} Course${list.length !== 1 ? 's' : ''}`;
-}
+  getFilteredCourses(context) {
+    const searchId = context === 'home' ? 'home-search' : 'courses-search';
+    const catId = context === 'home' ? 'filter-category' : 'cp-category';
+    const lvlId = context === 'home' ? 'filter-level' : 'cp-level';
+    const openId = context === 'home' ? 'check-open' : 'cp-open';
+    const closedId = context === 'home' ? 'check-closed' : 'cp-closed';
 
-function filterHomeSearch() {
-  const q      = document.getElementById('home-search').value.toLowerCase();
-  const cat    = document.getElementById('filter-category').value;
-  const lvl    = document.getElementById('filter-level').value;
-  const open   = document.getElementById('check-open').checked;
-  const closed = document.getElementById('check-closed').checked;
+    const q = document.getElementById(searchId)?.value.toLowerCase() || '';
+    const cat = document.getElementById(catId)?.value || '';
+    const lvl = document.getElementById(lvlId)?.value || '';
+    const open = document.getElementById(openId)?.checked ?? true;
+    const closed = document.getElementById(closedId)?.checked ?? true;
 
-  const filtered = courses.filter(c => {
-    if (q && !c.title.toLowerCase().includes(q) && !c.desc.toLowerCase().includes(q)) return false;
-    if (cat && c.category !== cat) return false;
-    if (lvl && c.level !== lvl) return false;
-    if (!open   && c.enrollment === 'Open')   return false;
-    if (!closed && c.enrollment === 'Closed') return false;
-    return true;
-  });
+    return courses.filter(c => {
+      const matchSearch = !q || c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q);
+      const matchCat = !cat || c.category === cat;
+      const matchLvl = !lvl || c.level === lvl;
+      const matchStatus = (open && c.enrollment === 'Open') || (closed && c.enrollment === 'Closed');
+      return matchSearch && matchCat && matchLvl && matchStatus;
+    });
+  },
 
-  renderHomeGrid(filtered);
-}
+  renderHomeGrid() {
+    if (!this.elements.grids.home) return;
+    const list = this.getFilteredCourses('home').slice(0, 3);
+    this.elements.grids.home.innerHTML = list.length 
+      ? list.map(c => this.renderCard(c)).join('')
+      : '<p class="empty-msg">No courses match your search.</p>';
+  },
 
-function filterCoursesPage() {
-  const q      = document.getElementById('courses-search').value.toLowerCase();
-  const cat    = document.getElementById('cp-category').value;
-  const lvl    = document.getElementById('cp-level').value;
-  const open   = document.getElementById('cp-open').checked;
-  const closed = document.getElementById('cp-closed').checked;
+  renderCoursesGrid() {
+    if (!this.elements.grids.courses) return;
+    const list = this.getFilteredCourses('courses');
+    this.elements.grids.courses.innerHTML = list.length 
+      ? list.map(c => this.renderCard(c)).join('')
+      : '<p class="empty-msg">No courses match your filters.</p>';
+    
+    const countEl = document.getElementById('courses-count');
+    if (countEl) countEl.textContent = `${list.length} Course${list.length !== 1 ? 's' : ''}`;
+  },
 
-  const filtered = courses.filter(c => {
-    if (q && !c.title.toLowerCase().includes(q) && !c.desc.toLowerCase().includes(q)) return false;
-    if (cat && c.category !== cat) return false;
-    if (lvl && c.level !== lvl) return false;
-    if (!open   && c.enrollment === 'Open')   return false;
-    if (!closed && c.enrollment === 'Closed') return false;
-    return true;
-  });
+  handleFilterChange() {
+    if (this.state.currentPage === 'home') this.renderHomeGrid();
+    if (this.state.currentPage === 'courses') this.renderCoursesGrid();
+  },
 
-  renderCoursesGrid(filtered);
-}
+  enrollCourse(id) {
+    const c = courses.find(x => x.id === id);
+    if (c) {
+      c.enrolled = true;
+      c.students++;
+      this.handleFilterChange();
+      this.showToast(`🎉 Enrolled in "${c.title}"!`);
+    }
+  },
 
-function enrollCourse(id, e) {
-  e.stopPropagation();
-  const c = courses.find(x => x.id === id);
-  if (c) {
-    c.enrolled = true;
-    c.students++;
-    renderCoursesGrid(courses);
-    renderHomeGrid(courses);
-    showToast(`🎉 Enrolled in "${c.title}"!`);
+  showToast(msg) {
+    if (!this.elements.toast) return;
+    this.elements.toast.textContent = msg;
+    this.elements.toast.classList.add('show');
+
+    clearTimeout(this.state.toastTimer);
+    this.state.toastTimer = setTimeout(() => {
+      this.elements.toast.classList.remove('show');
+    }, 3200);
   }
-}
+};
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3200);
-}
+// Global hooks
+window.showPage = (id) => App.showPage(id);
+window.enrollCourse = (id) => App.enrollCourse(id);
+window.showToast = (msg) => App.showToast(msg);
+window.toggleFaq = (el) => el.classList.toggle('open');
+window.App = App;
 
-
-function toggleFaq(el) {
-  el.classList.toggle('open');
-}
-
-renderHomeGrid(courses);
+document.addEventListener('DOMContentLoaded', () => App.init());

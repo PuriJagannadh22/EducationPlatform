@@ -34,5 +34,5 @@ Member 4 - Testing & Documentation
 - Responsive UI
 - Toast notifications
 - Keyframe animations
-- Interactive filtering system
+- Interactive filtering system.
 

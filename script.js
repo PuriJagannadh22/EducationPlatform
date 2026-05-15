@@ -156,9 +156,28 @@ const App = {
     // Bind Events
     this.bindEvents();
 
+    // Theme Initialization
+    this.initTheme();
+
     // Initial Routing
     const initialPage = window.location.hash.replace('#', '') || 'home';
     this.showPage(initialPage, true);
+  },
+
+  initTheme() {
+    const savedTheme = localStorage.getItem('edulms-theme') || 'dark';
+    this.applyTheme(savedTheme);
+    const selector = document.getElementById('theme-selector');
+    if (selector) selector.value = savedTheme;
+  },
+
+  applyTheme(theme) {
+    if (theme === 'light') {
+      document.body.classList.add('light-mode');
+    } else {
+      document.body.classList.remove('light-mode');
+    }
+    localStorage.setItem('edulms-theme', theme);
   },
 
   bindEvents() {
@@ -192,6 +211,15 @@ const App = {
         el.addEventListener(eventType, () => this.handleFilterChange());
       }
     });
+
+    // Theme Selector
+    const themeSelector = document.getElementById('theme-selector');
+    if (themeSelector) {
+      themeSelector.addEventListener('change', (e) => {
+        this.applyTheme(e.target.value);
+        this.showToast(`Theme switched to ${e.target.value} mode!`);
+      });
+    }
   },
 
   toggleMobileMenu() {
